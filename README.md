@@ -6,3 +6,5 @@ http://dictionary-api.org/sites/default/files/field/doc/android/Readme.html
 http://www.programmableweb.com/api/english-dictionary
 #Google translate api:
 https://code.google.com/archive/p/google-api-translate-java/
+http://developer.android.com/training/wearables/apps/voice.html
+https://developers.google.com/voice-actions/system/#search_actions
