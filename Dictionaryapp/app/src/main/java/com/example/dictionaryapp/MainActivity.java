@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button searchButton;
     EditText wordInput;
     private static final String  url0 = "http://api.wordnik.com:80/v4/word.json/";
-    private static final String url1 = "/definitions?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5";
+    private static final String url1 = "/definitions?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key=54d58ad1400c9bc39d59b4c5dae05829cb6d4086bcfe2c886";
     String url,response;
     int duration = Toast.LENGTH_SHORT;
 
