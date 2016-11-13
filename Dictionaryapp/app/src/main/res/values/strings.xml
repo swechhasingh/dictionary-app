@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Dictionary app</string>
+    <string name="title_activity_search_result">Word</string>
 </resources>

@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.dictionaryapp.MainActivity">
+    tools:context="com.example.dictionaryapp.MainActivity"
+    android:background="@color/grey">
         <android.support.v7.widget.SearchView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -12,18 +13,33 @@
             android:background="@color/colorAccent"/>
 
         <TextView
+            android:text="Word Of the day"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#000000"
-            android:id="@+id/textView"
+            android:id="@+id/label"
+            android:background="#ffffff"
             android:layout_below="@+id/searchView"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
+            android:padding="5dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:id="@+id/textView"
+            android:layout_below="@+id/label"
+            android:background="#8c9eff"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:textSize="30sp"
             android:gravity="center_horizontal"
             android:textStyle="italic"/>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,7 +47,12 @@
             android:layout_centerHorizontal="true"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="1dp"
+            android:background="#8c9eff"
             android:textColor="#000000"
-            android:id="@+id/meaning" />
+            android:padding="5dp"
+            android:id="@+id/meaning"
+            android:layout_alignParentBottom="true" />
+    </ScrollView>
+
 </RelativeLayout>

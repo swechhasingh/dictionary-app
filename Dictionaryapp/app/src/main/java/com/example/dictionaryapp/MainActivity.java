@@ -1,42 +1,19 @@
 package com.example.dictionaryapp;
 
-import android.annotation.TargetApi;
-import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
-import android.text.format.Time;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,6 +22,8 @@ import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -52,18 +31,17 @@ public class MainActivity extends AppCompatActivity {
     TextView textView;
     TextView resusltTxt;
     SearchView searchView;
-    private static  final String  url0 = "http://api.wordnik.com:80/v4/word.json/";
-    private static final String url1 = "/definitions?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key=54d58ad1400c9bc39d59b4c5dae05829cb6d4086bcfe2c886";
-    int duration = Toast.LENGTH_SHORT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         textView = (TextView) findViewById(R.id.textView);
         resusltTxt = (TextView) findViewById(R.id.meaning);
+
+        GetWordOfTheDayTask getWordOfTheDayTask = new GetWordOfTheDayTask();
+        getWordOfTheDayTask.execute();
 
         // Get the SearchView and set the searchable configuration
         final SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -71,11 +49,11 @@ public class MainActivity extends AppCompatActivity {
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-        //searchView.setOnSearchClickListener();
-        EditText txtSearch = ((EditText)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text));
-        txtSearch.setHint("Search a word");
+
+        EditText txtSearch = ((EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text));
         txtSearch.setHintTextColor(Color.LTGRAY);
         txtSearch.setTextColor(Color.WHITE);
+
         try {
             Field mCursorDrawableRes = TextView.class.getDeclaredField("mCursorDrawableRes");
             mCursorDrawableRes.setAccessible(true);
@@ -83,44 +61,28 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                textView.setText(query);
-                GetWordMeanTask getWordMeanTask = new GetWordMeanTask();
-                getWordMeanTask.execute(query.trim().toLowerCase());
+
+                Intent intent = new Intent(getApplicationContext(), SearchResultActivity.class);
+                intent.putExtra("query", query);
+                startActivity(intent);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+
                 return false;
             }
         });
     }
 
+    public class GetWordOfTheDayTask extends AsyncTask<String, Void, String> {
 
-    public class GetWordMeanTask extends AsyncTask<String, Void, String> {
-
-        private final String LOG_TAG = GetWordMeanTask.class.getSimpleName();
-
-        private String getWordMeaningFromJson(String JsonStr)
-                throws JSONException {
-
-            final String WORD_MEANING = "text";
-            String resultStr = "No word found.";
-            JSONArray jsonArray = new JSONArray(JsonStr);
-            if(jsonArray.length() > 0) {
-                JSONObject jsonObject = jsonArray.getJSONObject(0);
-
-                resultStr = jsonObject.getString(WORD_MEANING);
-            }
-
-            Log.v(LOG_TAG, "Word meaning: " + resultStr);
-
-            return resultStr;
-
-        }
+        private final String LOG_TAG = MainActivity.GetWordOfTheDayTask.class.getSimpleName();
 
         @Override
         protected String doInBackground(String... params) {
@@ -128,13 +90,15 @@ public class MainActivity extends AppCompatActivity {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
+            String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
             String JsonStr = null;
 
             try {
 
-                final String BASE_URL1 = "http://api.wordnik.com:80/v4/word.json/";
-                final String BASE_URL2 = "/definitions?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key=54d58ad1400c9bc39d59b4c5dae05829cb6d4086bcfe2c886";
-                final String BASE_URL = BASE_URL1 + params[0] + BASE_URL2;
+                final String BASE_URL1 = "http://api.wordnik.com:80/v4/words.json/wordOfTheDay?date=";
+                final String BASE_URL2 = "&api_key=54d58ad1400c9bc39d59b4c5dae05829cb6d4086bcfe2c886";
+                final String BASE_URL = BASE_URL1 + date + BASE_URL2;
 
                 URL url = new URL(BASE_URL);
 
@@ -184,23 +148,47 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-            try {
-                return getWordMeaningFromJson(JsonStr);
-            } catch (JSONException e) {
-                Log.e(LOG_TAG, e.getMessage(), e);
-                e.printStackTrace();
-            }
 
-            return null;
+            return JsonStr;
         }
 
         @Override
-        protected void onPostExecute(String string) {
-            if(string != null){
-                resusltTxt.setText(string);
+        protected void onPostExecute(String JsonStr) {
+            if(JsonStr != null){
+
+                final String WORD_MEANING = "text";
+                final String PART_OF_SPEECH = "partOfSpeech";
+                String resultStr = "No word found.";
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = new JSONObject(JsonStr);
+                    textView.setText(jsonObject.getString("word"));
+                    JSONArray jsonArray = jsonObject.getJSONArray("definitions");
+                    JSONObject jsonObj = jsonArray.getJSONObject(0);
+                    resultStr = PART_OF_SPEECH + " : " +jsonObj.getString(PART_OF_SPEECH) + "\n" + "Meaning : \n";
+                    for (int i = 0; i < jsonArray.length(); i++){
+                        JSONObject jsonOBJECT = jsonArray.getJSONObject(i);
+                        resultStr = resultStr + jsonOBJECT.getString(WORD_MEANING) + "; ";
+                    }
+
+                    jsonArray = jsonObject.getJSONArray("examples");
+                    resultStr = resultStr + "\nExamples" + "\n";
+                    for (int i = 0; i < jsonArray.length(); i++){
+                        JSONObject jsonOBJECT = jsonArray.getJSONObject(i);
+                        int j = i+1;
+                        resultStr = resultStr + j + ". " +jsonOBJECT.getString("text") + "\n";
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.v(LOG_TAG, "Word meaning: " + resultStr);
+                resusltTxt.setText(resultStr);
             }
 
         }
     }
+
 
 }
