@@ -17,12 +17,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/label"
-            android:background="#ffffff"
+            android:background="@drawable/corners"
             android:layout_below="@+id/searchView"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
-            android:padding="5dp"/>
+            android:padding="5dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,20 +39,20 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView">
+        android:layout_below="@+id/textView"
+        android:layout_alignParentBottom="true">
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_below="@+id/textView"
             android:layout_centerHorizontal="true"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="1dp"
-            android:background="#8c9eff"
+            android:background="@drawable/corner_bottom"
             android:textColor="#000000"
             android:padding="5dp"
-            android:id="@+id/meaning"
-            android:layout_alignParentBottom="true" />
+            android:id="@+id/meaning"/>
     </ScrollView>
 
 </RelativeLayout>

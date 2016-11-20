@@ -165,10 +165,10 @@ public class MainActivity extends AppCompatActivity {
                     textView.setText(jsonObject.getString("word"));
                     JSONArray jsonArray = jsonObject.getJSONArray("definitions");
                     JSONObject jsonObj = jsonArray.getJSONObject(0);
-                    resultStr = PART_OF_SPEECH + " : " +jsonObj.getString(PART_OF_SPEECH) + "\n" + "Meaning : \n";
+                    resultStr = PART_OF_SPEECH + " : " +jsonObj.getString(PART_OF_SPEECH) + "\n\n" + "Meaning : \n";
                     for (int i = 0; i < jsonArray.length(); i++){
                         JSONObject jsonOBJECT = jsonArray.getJSONObject(i);
-                        resultStr = resultStr + jsonOBJECT.getString(WORD_MEANING) + "; ";
+                        resultStr = resultStr + jsonOBJECT.getString(WORD_MEANING) + "\n";
                     }
 
                     jsonArray = jsonObject.getJSONArray("examples");

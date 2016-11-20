@@ -57,6 +57,10 @@ public class SearchResultActivity extends AppCompatActivity {
                 final String BASE_URL2 = "/definitions?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key=54d58ad1400c9bc39d59b4c5dae05829cb6d4086bcfe2c886";
                 final String BASE_URL = BASE_URL1 + params[0] + BASE_URL2;
 
+//                final String EX_API_URL = "http://api.wordnik.com:80/v4/word.json/";
+//                final String EX_API_URL1 = "/topExample?useCanonical=false&api_key=54d58ad1400c9bc39d59b4c5dae05829cb6d4086bcfe2c886";
+//                final String EX_URL = EX_API_URL + params[0] + EX_API_URL1;
+
                 URL url = new URL(BASE_URL);
 
                 Log.v(LOG_TAG, "URi"+ BASE_URL);
@@ -124,10 +128,10 @@ public class SearchResultActivity extends AppCompatActivity {
                         return;
                     }
                     JSONObject jsonObj = jsonArray.getJSONObject(0);
-                    resultStr = PART_OF_SPEECH + " : " +jsonObj.getString(PART_OF_SPEECH) + "\n";
+                    resultStr = PART_OF_SPEECH + " : " +jsonObj.getString(PART_OF_SPEECH) + "\n\n" + "Meaning : \n";
                     for (int i = 0; i < jsonArray.length(); i++){
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        resultStr = resultStr + jsonObject.getString(WORD_MEANING) + "; ";
+                        resultStr = resultStr + jsonObject.getString(WORD_MEANING) + "\n";
                     }
 
                 } catch (JSONException e) {
